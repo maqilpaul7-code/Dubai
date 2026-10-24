@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DUBAI — City of Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@200;300;400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#d9b36a;--gold2:#f3dca6;--ink:#06080f;--coral:#ff7a50}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#000;scroll-behavior:smooth}
+body{font-family:'Poppins',system-ui,sans-serif;color:#fff;background:#000;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--gold);color:#000}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--gold)}
+
+/* ---------- fixed image background (no video, performant) ---------- */
+#bgwrap{position:fixed;inset:0;z-index:0;background:#000;overflow:hidden}
+#bgimg{position:absolute;inset:-4%;width:108%;height:108%;background:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2400&q=80') center/cover no-repeat;will-change:transform;transform:translate3d(0,0,0) scale(1.05)}
+#bgveil{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.1) 40%,rgba(0,0,0,.85) 100%);pointer-events:none}
+
+/* ---------- preloader ---------- */
+#pre{position:fixed;inset:0;background:#000;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s .2s,visibility .8s .2s}
+#pre.done{opacity:0;visibility:hidden}
+#pre b{font-family:'Cinzel',serif;font-size:clamp(2rem,8vw,5rem);letter-spacing:.4em;color:var(--gold);padding-left:.4em}
+#pre i{display:block;margin-top:26px;width:200px;height:1px;background:#222;position:relative;overflow:hidden}
+#pre i::after{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-100%);animation:ld 1.6s forwards}
+@keyframes ld{to{transform:none}}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:22px 4vw;mix-blend-mode:difference}
+.logo{font-family:'Cinzel',serif;letter-spacing:.35em;font-size:1rem;font-weight:700}
+.links{display:flex;gap:34px;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;font-weight:300}
+.links a{position:relative;padding:4px 0}
+.links a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:#fff;transition:.4s}
+.links a:hover::after{width:100%}
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--gold);width:0;z-index:101;will-change:width}
+.burger{display:none;background:none;border:0;color:#fff;font-size:1.4rem;cursor:pointer}
+
+/* ---------- custom cursor ---------- */
+.cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);mix-blend-mode:difference;will-change:left,top}
+.cur-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(212,175,55,.7);pointer-events:none;z-index:9997;transform:translate(-50%,-50%);will-change:left,top;transition:width .2s,height .2s,opacity .2s}
+@media (hover:none){.cur,.cur-ring{display:none}body{cursor:auto}}
+
+/* ---------- intro: DUBAI cut-out zoom ---------- */
+#hero-space{height:380vh;position:relative;z-index:2}
+#cut{position:fixed;inset:0;z-index:5;background:#000;mix-blend-mode:multiply;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden}
+#cut h1{font-family:'Cinzel',serif;font-weight:700;color:#fff;font-size:min(27vw,38vh);line-height:1;letter-spacing:.02em;white-space:nowrap;will-change:transform}
+#hero-ui{position:fixed;inset:0;z-index:6;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:14vh 6vw 7vh;text-align:center}
+#hero-ui .top{letter-spacing:.7em;font-size:.72rem;font-weight:300;color:var(--gold2);padding-left:.7em}
+#hero-ui .bot{font-weight:200;font-size:.9rem;letter-spacing:.2em}
+#hero-ui .bot i{display:block;width:1px;height:50px;margin:12px auto 0;background:linear-gradient(var(--gold),transparent);animation:dr 1.8s infinite}
+@keyframes dr{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+#hero2{position:fixed;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;padding:0 8vw}
+#hero2 h2{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(1.6rem,5vw,4rem);letter-spacing:.12em;line-height:1.3;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+#hero2 h2 em{font-style:normal;color:var(--gold2)}
+
+/* ---------- content layer ---------- */
+main{position:relative;z-index:10}
+.big-text{padding:30vh 6vw;text-align:center}
+.big-text p{font-family:'Cinzel',serif;font-size:clamp(1.8rem,5.5vw,4.6rem);line-height:1.25;font-weight:400}
+.big-text p span{opacity:.18;transition:opacity .6s}
+.big-text p span.on{opacity:1}
+.kicker{display:block;letter-spacing:.5em;font-size:.7rem;color:var(--gold);margin-bottom:24px;font-family:'Poppins';font-weight:300}
+
+/* ---------- scenes (sticky chapters) ---------- */
+.scene{height:300vh;position:relative}
+.s-in{position:sticky;top:0;height:100vh;overflow:hidden;background:#05070d}
+.s-img{position:absolute;inset:-6%;background-size:cover;background-position:center;will-change:transform}
+.s-img img{width:100%;height:100%;object-fit:cover;display:block}
+.s-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.75),rgba(0,0,0,.05) 65%),linear-gradient(0deg,rgba(0,0,0,.7),transparent 50%)}
+.s-word{position:absolute;left:0;top:50%;font-family:'Bebas Neue',sans-serif;font-size:clamp(7rem,28vw,30rem);line-height:.8;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.55);will-change:transform;transform:translateY(-50%);pointer-events:none}
+.s-card{position:absolute;left:5vw;bottom:9vh;max-width:480px;opacity:0;transform:translateY(40px);will-change:transform,opacity}
+.s-card .no{font-family:'Cinzel',serif;color:var(--gold);letter-spacing:.3em;font-size:.8rem}
+.s-card h3{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(2rem,4.5vw,3.6rem);margin:10px 0 14px;line-height:1.1}
+.s-card p{font-weight:300;line-height:1.75;opacity:.88;font-size:.98rem}
+.s-card .fact{margin-top:18px;display:inline-block;padding:9px 20px;border:1px solid var(--gold);border-radius:40px;font-size:.78rem;letter-spacing:.15em;color:var(--gold2);backdrop-filter:blur(6px);background:rgba(0,0,0,.25)}
+.s-bar{position:absolute;right:4vw;top:50%;width:2px;height:120px;margin-top:-60px;background:rgba(255,255,255,.2)}
+.s-bar i{display:block;width:100%;height:0;background:var(--gold)}
+
+/* ---------- horizontal gallery ---------- */
+#exp{height:480vh;position:relative}
+#exp .s-in{background:transparent}
+#exp-head{position:absolute;top:12vh;left:5vw;z-index:3}
+#exp-head h2{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,4rem);font-weight:400;margin-top:6px}
+#htrack{position:absolute;top:50%;left:0;display:flex;gap:3vw;padding:0 5vw;margin-top:-26vh;will-change:transform;padding-top:14vh}
+.hc{flex:0 0 min(70vw,520px);height:58vh;position:relative;overflow:hidden;border-radius:6px;background:#111;border:1px solid rgba(255,255,255,.1);will-change:transform}
+.hc .im{position:absolute;inset:0;background-size:cover;transition:transform .6s}
+.hc .im img{width:100%;height:100%;object-fit:cover;display:block}
+.hc:hover .im{transform:scale(1.06)}
+.hc::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.88),transparent 55%)}
+.hc div.t{position:absolute;left:26px;right:26px;bottom:24px;z-index:2}
+.hc small{color:var(--gold);letter-spacing:.3em;font-size:.65rem}
+.hc h4{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:600;margin:6px 0}
+.hc p{font-weight:300;font-size:.86rem;line-height:1.6;opacity:.85}
+
+/* ---------- glass sections ---------- */
+.sec{padding:16vh 6vw}
+.sec h2{font-family:'Cinzel',serif;font-weight:400;font-size:clamp(2rem,5.5vw,4.4rem);margin-bottom:56px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:34px}
+.glass{background:rgba(8,10,20,.55);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);padding:42px;border-radius:4px}
+.glass h3{font-family:'Cinzel',serif;color:var(--gold2);font-size:1.6rem;margin-bottom:22px;font-weight:600}
+.row{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1);transition:.3s}
+.row:last-child{border:0}
+.row:hover{padding-left:14px;border-color:var(--gold)}
+.row h4{font-weight:400;font-size:1.05rem;letter-spacing:.04em}
+.row p{font-weight:300;font-size:.85rem;opacity:.7;margin-top:4px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;text-align:center;padding:14vh 6vw}
+.stats b{display:block;font-family:'Cinzel',serif;font-weight:400;font-size:clamp(3rem,7vw,6rem);color:var(--gold2)}
+.stats span{font-size:.7rem;letter-spacing:.3em;font-weight:300;opacity:.75}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fb{padding:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+.fb b{display:block;font-size:.65rem;letter-spacing:.3em;color:var(--gold);font-weight:400;margin-bottom:6px}
+.fb span{font-size:.9rem;font-weight:300}
+form{display:grid;gap:14px}
+input,select,textarea{width:100%;padding:15px 18px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);color:#fff;font:300 .95rem 'Poppins';border-radius:2px}
+select option{color:#000}
+input:focus,select:focus,textarea:focus{outline:1px solid var(--gold)}
+.btn{padding:16px;border:1px solid var(--gold);background:transparent;color:var(--gold2);letter-spacing:.3em;font:400 .8rem 'Poppins';text-transform:uppercase;cursor:pointer;transition:.3s}
+.btn:hover{background:var(--gold);color:#000}
+#est{font-size:.88rem;color:var(--gold2)}#msg{color:#7ee3c1;min-height:1.3em}
+footer{text-align:center;padding:14vh 6vw 8vh}
+footer h2{font-family:'Cinzel',serif;font-size:clamp(3rem,13vw,11rem);font-weight:700;letter-spacing:.1em;color:transparent;-webkit-text-stroke:1px var(--gold);line-height:1}
+footer p{margin-top:28px;font-size:.75rem;font-weight:300;opacity:.55;letter-spacing:.1em}
+.rv{opacity:0;transform:translateY(60px);transition:1.1s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- extra animations ---------- */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(212,175,55,.15)}50%{box-shadow:0 0 40px rgba(212,175,55,.35)}}
+.kicker{animation:shimmer 4s linear infinite;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo{animation:float 4s ease-in-out infinite}
+.s-card .fact{animation:glow 3s ease-in-out infinite}
+.hc:hover{box-shadow:0 0 40px rgba(212,175,55,.25)}
+.hc .im img{transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .6s}
+.hc:hover .im img{transform:scale(1.12);filter:brightness(1.1) saturate(1.2)}
+.glass{transition:transform .4s,box-shadow .4s}
+.glass:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(212,175,55,.1)}
+.row{transition:padding-left .3s,border-color .3s,transform .3s}
+.row:hover{transform:translateX(6px)}
+.btn{position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transform:translateX(-100%);transition:transform .6s}
+.btn:hover::before{transform:translateX(100%)}
+.fb{transition:transform .3s,box-shadow .3s,background .3s}
+.fb:hover{transform:translateY(-2px);background:rgba(212,175,55,.08);border-color:var(--gold);box-shadow:0 8px 24px rgba(212,175,55,.2)}
+#prog{box-shadow:0 0 12px rgba(212,175,55,.6)}
+.s-card{transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.s-card:hover{transform:translateY(-8px)}
+.s-word{-webkit-text-stroke:1.5px rgba(255,255,255,.55);transition:-webkit-text-stroke .4s}
+.scene:hover .s-word{-webkit-text-stroke:1.5px rgba(212,175,55,.7)}
+/* scroll velocity skew already applied via JS */
+
+@media(max-width:800px){
+ .links{display:none;position:fixed;inset:0;background:#000;flex-direction:column;justify-content:center;align-items:center;font-size:1rem;mix-blend-mode:normal}
+ .links.open{display:flex}.burger{display:block;position:relative;z-index:102}
+ .s-card{left:6vw;right:6vw;max-width:none}
+ .hc{flex-basis:80vw}
+ .s-bar{display:none}
+ .cur,.cur-ring{display:none}
+}
+/* ---------- landscape phones ---------- */
+@media (max-width:900px) and (orientation:landscape){
+ .hero-space,#hero-space{height:260vh}
+ .scene{height:220vh}
+ #exp{height:360vh}
+ .s-word{font-size:clamp(5rem,22vw,20rem)}
+ .s-card{bottom:6vh;max-width:420px}
+ .hc{flex-basis:55vw;height:62vh}
+}
+/* ---------- tablet portrait ---------- */
+@media (min-width:768px) and (max-width:1024px) and (orientation:portrait){
+ .s-card{max-width:420px}
+ .hc{flex-basis:60vw}
+ .scene{height:280vh}
+}
+/* ---------- tablet landscape / small desktop ---------- */
+@media (min-width:1024px) and (max-width:1280px){
+ .s-card{max-width:460px}
+ .hc{flex-basis:50vw}
+}
+/* ---------- large desktop ---------- */
+@media (min-width:1920px){
+ #cut h1{font-size:min(22vw,34vh)}
+ .s-word{font-size:clamp(9rem,24vw,34rem)}
+ .big-text p{font-size:clamp(2.2rem,5vw,5.2rem)}
+}
+/* ---------- very small phones ---------- */
+@media (max-width:360px){
+ .s-card h3{font-size:1.6rem}
+ .s-card p{font-size:.85rem}
+ .hc h4{font-size:1.4rem}
+ .kicker{font-size:.6rem;letter-spacing:.35em}
+ nav{padding:16px 4vw}
+ .links{gap:20px}
+}
+</style>
+</head>
+<body>
+
+<div id="pre"><b>DUBAI</b><i></i></div>
+<div id="prog"></div>
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<!-- fixed image background (no video) -->
+<div id="bgwrap">
+  <div id="bgimg"></div>
+</div>
+<div id="bgveil"></div>
+<canvas id="particles" style="position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5"></canvas>
+
+<nav>
+  <a href="#" class="logo">DUBAI</a>
+  <div class="links" id="links">
+    <a href="#landmarks">Landmarks</a><a href="#exp">Experiences</a><a href="#stay">Food &amp; Stay</a><a href="#plan">Plan</a>
+  </div>
+  <button class="burger" id="burger" aria-label="menu">☰</button>
+</nav>
+
+<!-- INTRO -->
+<div id="cut"><h1 id="cutText">DUBAI</h1></div>
+<div id="hero-ui"><div class="top">UNITED ARAB EMIRATES</div><div class="bot">SCROLL TO ENTER<i></i></div></div>
+<div id="hero2"><h2>WHERE THE DESERT<br>MEETS THE <em>SKY</em></h2></div>
+<div id="hero-space"></div>
+
+<main>
+  <section class="big-text">
+    <span class="kicker rv">THE CITY OF GOLD</span>
+    <p id="manifesto">Four decades ago it was sand and a creek. Today it is the tallest tower on Earth, an island shaped like a palm tree, and a skyline that never sleeps.</p>
+  </section>
+
+  <div id="landmarks"></div>
+
+  <div class="stats">
+    <div class="rv"><b data-c="828">0</b><span>METRES · BURJ KHALIFA</span></div>
+    <div class="rv"><b data-c="163">0</b><span>FLOORS</span></div>
+    <div class="rv"><b data-c="9">0</b><span>MILLION+ VISITORS A YEAR</span></div>
+    <div class="rv"><b data-c="200">0</b><span>NATIONALITIES CALL IT HOME</span></div>
+  </div>
+
+  <section id="exp">
+    <div class="s-in">
+      <div id="exp-head"><span class="kicker">THINGS TO DO</span><h2>Experiences</h2></div>
+      <div id="htrack"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="stay">
+    <span class="kicker rv">EAT · SLEEP</span>
+    <h2 class="rv">Food &amp; Hotels</h2>
+    <div class="cols">
+      <div class="glass rv">
+        <h3>Where to Eat</h3>
+        <div class="row"><h4>Shawarma &amp; Street Food</h4><p>Cheap, fast and everywhere. Karama and Satwa for the classics.</p></div>
+        <div class="row"><h4>Emirati Cuisine</h4><p>Machboos, harees and luqaimat with Arabic coffee and dates.</p></div>
+        <div class="row"><h4>Dining With a View</h4><p>Downtown restaurants look straight onto the Burj and the fountains.</p></div>
+        <div class="row"><h4>Friday Brunch</h4><p>Long, lavish and a Dubai tradition.</p></div>
+      </div>
+      <div class="glass rv">
+        <h3>Where to Stay</h3>
+        <div class="row"><h4>Burj Al Arab Jumeirah</h4><p>The sail-shaped icon on its own island. Ultimate luxury.</p></div>
+        <div class="row"><h4>Downtown Dubai</h4><p>Walk to Dubai Mall, the fountain and Burj Khalifa.</p></div>
+        <div class="row"><h4>Palm Jumeirah</h4><p>Beach resorts, private shores and Atlantis.</p></div>
+        <div class="row"><h4>Deira &amp; Bur Dubai</h4><p>Budget friendly, close to the souks and the Creek.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="plan">
+    <span class="kicker rv">READY?</span>
+    <h2 class="rv">Plan Your Trip</h2>
+    <div class="cols">
+      <div class="glass rv">
+        <h3>Quick Facts</h3>
+        <div class="facts">
+          <div class="fb"><b>BEST TIME</b><span>Nov – Mar (20–30°C)</span></div>
+          <div class="fb"><b>CURRENCY</b><span>UAE Dirham (AED)</span></div>
+          <div class="fb"><b>LANGUAGE</b><span>Arabic &amp; English</span></div>
+          <div class="fb"><b>TRANSPORT</b><span>Metro, taxi, ride-hailing</span></div>
+          <div class="fb"><b>DRESS</b><span>Modest in malls &amp; mosques</span></div>
+          <div class="fb"><b>SUMMER</b><span>Often over 40°C</span></div>
+        </div>
+      </div>
+      <form class="glass rv" id="tf">
+        <h3>Trip Estimator</h3>
+        <input id="nm" placeholder="Your name" required>
+        <select id="dy"><option value="3">3 days</option><option value="5" selected>5 days</option><option value="7">7 days</option><option value="10">10 days</option></select>
+        <select id="st"><option value="150">Budget</option><option value="350" selected>Comfort</option><option value="900">Luxury</option></select>
+        <textarea id="nt" rows="3" placeholder="What must you see?"></textarea>
+        <div id="est"></div>
+        <button class="btn" type="submit">Build my trip</button>
+        <div id="msg"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer><h2>DUBAI</h2><p>FAN-MADE TRAVEL SHOWCASE · FACTS ARE APPROXIMATE · CONFIRM PRICES, VISAS AND HOURS BEFORE YOU TRAVEL</p></footer>
+</main>
+
+<script>
+/* ---------- image helper ---------- */
+function img(el,urls,grad){
+  el.style.background=grad;
+  var i=0;
+  function next(){
+    if(i>=urls.length)return;
+    var im=new Image();
+    im.onload=function(){el.innerHTML='';el.appendChild(im)};
+    im.onerror=function(){i++;next()};
+    im.src=urls[i];
+  }
+  next();
+}
+
+/* ---------- data ---------- */
+var S=[
+ {w:'BURJ KHALIFA',t:'Burj Khalifa',d:'The tallest structure ever built. Ride the elevator to the observation decks and watch the desert, the sea and the whole city shrink beneath you.',f:'828 m · 163 floors · OPENED 2010',
+  u:['https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#ffdf9e,#c9822f 40%,#1b1240)'},
+ {w:'BURJ AL ARAB',t:'Burj Al Arab',d:'A sail on its own island. The most recognisable hotel on the planet, glowing in shifting colours after dark.',f:'321 m · OPENED 1999',
+  u:['https://images.unsplash.com/photo-1546412414-e1885259563a?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#9be7ff,#1a8fb5 45%,#0b2447)'},
+ {w:'PALM JUMEIRAH',t:'Palm Jumeirah',d:'An artificial island in the shape of a palm tree, so large it can be seen from space. Resorts, villas, and Atlantis at the tip.',f:'16 FRONDS · OPENED 2006',
+  u:['https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#7ff0c4,#12b5b0 45%,#0b3550)'},
+ {w:'DUBAI MARINA',t:'Dubai Marina',d:'A canal city of glass towers, yacht-filled harbour and the JBR beach walk. Best at blue hour.',f:'200+ TOWERS',
+  u:['https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#ffb3c8,#e0457b 45%,#2a1450)'},
+ {w:'FUTURE',t:'Museum of the Future',d:'A torus wrapped in Arabic calligraphy, hollow at its heart. Inside, exhibitions imagine how we will live tomorrow.',f:'77 m · OPENED 2022',
+  u:['https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#d9b3ff,#7a3fd1 45%,#150a33)'}
+];
+var E=[
+ {k:'DUNES',t:'Desert Safari',d:'4x4 dune bashing, camels and a camp dinner under the stars.',u:['https://media4.giphy.com/media/132Ob31MoSjuOA/giphy.gif','https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#ffcf8a,#c0622a)'},
+ {k:'SHOW',t:'Fountain Show',d:'Water, light and music jets up to 150 m beside Burj Khalifa. Free every evening.',u:['https://media4.giphy.com/media/VNMKsV5tzBB0sX6s5T/giphy.gif','https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#6bd6ff,#1b3a8a)'},
+ {k:'SHOP',t:'Malls & Souks',d:'Dubai Mall, the Gold Souk and the Spice Souk in old Deira.',u:['https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#ffd36b,#8a4a12)'},
+ {k:'SEA',t:'Dhow Cruise',d:'Dinner on a traditional wooden boat while the Marina glows around you.',u:['https://images.unsplash.com/photo-1526495124232-a04e1849168c?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#7a8bff,#1b1a5a)'},
+ {k:'SAND',t:'Beach Days',d:'JBR, Kite Beach and La Mer. Water sports with skyline views.',u:['https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#ff9bb8,#c13b6a)'},
+ {k:'SKY',t:'Balloon at Sunrise',d:'Float over the dunes as the desert changes colour beneath you.',u:['https://images.unsplash.com/photo-1451337516015-6b6e9a44a8a3?auto=format&fit=crop&w=2000&q=80','https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=80'],g:'linear-gradient(160deg,#b8f5c8,#1f8a5a)'}
+];
+
+/* ---------- build scenes ---------- */
+var host=document.getElementById('landmarks');
+S.forEach(function(s,i){
+  var sec=document.createElement('section');sec.className='scene';
+  sec.innerHTML='<div class="s-in"><div class="s-img"></div><div class="s-shade"></div><div class="s-word">'+s.w+'</div>'+
+  '<div class="s-card"><span class="no">0'+(i+1)+' / 0'+S.length+'</span><h3>'+s.t+'</h3><p>'+s.d+'</p><span class="fact">'+s.f+'</span></div>'+
+  '<div class="s-bar"><i></i></div></div>';
+  host.appendChild(sec);
+  img(sec.querySelector('.s-img'),s.u,s.g);
+});
+var ht=document.getElementById('htrack');
+E.forEach(function(e){
+  var d=document.createElement('div');d.className='hc';
+  d.innerHTML='<div class="im"></div><div class="t"><small>'+e.k+'</small><h4>'+e.t+'</h4><p>'+e.d+'</p></div>';
+  ht.appendChild(d);img(d.querySelector('.im'),e.u,e.g);
+});
+
+/* ---------- preloader ---------- */
+var pre=document.getElementById('pre');
+setTimeout(function(){pre.classList.add('done')},1600);
+
+/* ---------- manifesto word-by-word ---------- */
+var mf=document.getElementById('manifesto');
+mf.innerHTML=mf.textContent.split(' ').map(function(w){return '<span>'+w+'</span>'}).join(' ');
+var words=mf.querySelectorAll('span');
+
+/* ---------- scroll engine (rAF throttled) ---------- */
+var cut=document.getElementById('cut'),cutT=document.getElementById('cutText'),
+    hui=document.getElementById('hero-ui'),h2=document.getElementById('hero2'),
+    hs=document.getElementById('hero-space'),veil=document.getElementById('bgveil'),
+    prog=document.getElementById('prog'),bg=document.getElementById('bgimg');
+var scenes=[].slice.call(document.querySelectorAll('.scene')),exp=document.getElementById('exp'),track=document.getElementById('htrack');
+var scrollVel=0,lastY=0;
+function clamp(x){return Math.max(0,Math.min(1,x))}
+var mx=0,my=0,bgx=0,bgy=0,mx2=0,my2=0;
+document.addEventListener('mousemove',function(e){mx=(e.clientX/innerWidth-.5)*40;my=(e.clientY/innerHeight-.5)*30;mx2=(e.clientX/innerWidth-.5)*-20;my2=(e.clientY/innerHeight-.5)*-15},{passive:true});
+
+function frame(){
+  var y=scrollY,H=innerHeight,total=document.documentElement.scrollHeight-H;
+  scrollVel+=(y-lastY-scrollVel)*.2;lastY=y;
+  var sk=Math.max(-8,Math.min(8,scrollVel*.15));
+  prog.style.width=(y/total*100)+'%';
+
+  /* background image parallax (performant transform) */
+  bgx+=(mx-bgx)*.1; bgy+=(my-bgy)*.1;
+  var sc=1.05+ (y/total)*.08;
+  bg.style.transform='translate3d('+bgx+'px,'+bgy+'px,0) scale('+sc+')';
+  /* cut text parallax */
+  if(cut.style.display!=='none'){cutT.style.marginLeft=mx2+'px';cutT.style.marginTop=my2+'px'}
+  /* hero-ui parallax */
+  hui.style.transform='translate3d('+(mx*.5)+'px,'+(my*.5)+'px,0)';
+
+  /* intro */
+  var heroLen=hs.offsetHeight-H,h=clamp(y/heroLen);
+  var sc2=Math.exp(Math.pow(h,1.15)*Math.log(70));
+  cutT.style.transform='scale('+sc2+')';
+  var co=h<.72?1:clamp(1-(h-.72)/.2);
+  cut.style.opacity=co;cut.style.display=co<=0?'none':'flex';
+  hui.style.opacity=clamp(1-h*6);hui.style.display=h>.2?'none':'flex';
+  var t2=clamp((h-.74)/.1)*clamp(1-(h-.95)/.05);
+  h2.style.opacity=t2;h2.style.transform='scale('+(1+(1-clamp((h-.74)/.2))*.08)+')';
+  veil.style.opacity=.35+clamp((y-heroLen*.9)/H)*.5;
+
+  /* manifesto */
+  var mr=mf.getBoundingClientRect(),mp=clamp((H*.85-mr.top)/(H*.8+mr.height*.4));
+  var on=Math.floor(mp*words.length*1.15);
+  for(var i=0;i<words.length;i++)words[i].classList.toggle('on',i<on);
+
+  /* scenes */
+  for(var si=0;si<scenes.length;si++){
+    var s=scenes[si];
+    var r=s.getBoundingClientRect();
+    if(r.bottom<-100||r.top>H+100)continue;
+    var p=clamp(-r.top/(r.height-H));
+    var img=s.querySelector('.s-img');
+    if(img) img.style.transform='scale('+(1.2-p*.16)+') translateY('+(p*-3)+'%)';
+    var w=s.querySelector('.s-word');
+    if(w) w.style.transform='translate('+(8-p*70)+'vw,-50%) skewY('+sk+'deg)';
+    var c=s.querySelector('.s-card');
+    if(c){c.style.opacity=clamp((p-.12)/.2)*clamp((1-p)/.15+.0);c.style.transform='translateY('+(1-clamp((p-.12)/.25))*40+'px)'}
+    var bar=s.querySelector('.s-bar i');
+    if(bar) bar.style.height=(p*100)+'%';
+  }
+
+  /* horizontal gallery */
+  var er=exp.getBoundingClientRect();
+  if(er.bottom>-100&&er.top<H+100){
+    var ep=clamp(-er.top/(er.height-H)),dist=track.scrollWidth-innerWidth;
+    track.style.transform='translate3d('+(-ep*dist)+'px,0,0) skewX('+sk+'deg)';
+  }
+}
+var ticking=false;
+addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){frame();ticking=false})}},{passive:true});
+addEventListener('resize',frame);frame();
+
+/* ---------- reveal + counters ---------- */
+var io=new IntersectionObserver(function(en){en.forEach(function(e){
+  if(!e.isIntersecting)return;e.target.classList.add('in');
+  var b=e.target.querySelector('[data-c]');
+  if(b&&!b.d){b.d=1;var end=+b.dataset.c,t0=performance.now();(function st(t){var p=Math.min((t-t0)/2000,1);b.textContent=Math.floor(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(st);else b.textContent=end})(t0)}
+  io.unobserve(e.target)})},{threshold:.2});
+document.querySelectorAll('.rv').forEach(function(el,i){el.style.transitionDelay=(i%3)*.12+'s';io.observe(el)});
+
+/* ---------- menu ---------- */
+var L=document.getElementById('links');
+document.getElementById('burger').onclick=function(){L.classList.toggle('open')};
+L.onclick=function(){L.classList.remove('open')};
+
+/* ---------- custom cursor ---------- */
+var cur=document.getElementById('cur'),curRing=document.getElementById('curRing');
+var cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){cx=e.clientX;cy=e.clientY},{passive:true});
+(function loopCur(){
+  rx+=(cx-rx)*.18; ry+=(cy-ry)*.18;
+  cur.style.left=cx+'px';cur.style.top=cy+'px';
+  curRing.style.left=rx+'px';curRing.style.top=ry+'px';
+  requestAnimationFrame(loopCur);
+})();
+document.querySelectorAll('a,button,.hc,.row').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='24px';cur.style.height='24px';curRing.style.width='56px';curRing.style.height='56px';curRing.style.opacity='.3'});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';curRing.style.width='36px';curRing.style.height='36px';curRing.style.opacity='1'});
+});
+
+/* ---------- 3D tilt on experience cards ---------- */
+document.querySelectorAll('.hc').forEach(function(card){
+  card.addEventListener('mousemove',function(e){
+    var r=card.getBoundingClientRect();
+    var x=(e.clientX-r.left)/r.width-.5;
+    var y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform='perspective(800px) rotateX('+(-y*8)+'deg) rotateY('+(x*8)+'deg) translateZ(4px)';
+  });
+  card.addEventListener('mouseleave',function(){card.style.transform=''});
+});
+
+/* ---------- particles (lightweight, performant) ---------- */
+var pc=document.getElementById('particles');
+if(pc){
+  var pctx=pc.getContext('2d');
+  var pts=[];
+  function resizeP(){pc.width=innerWidth;pc.height=innerHeight;pts=Array.from({length:70},function(){return{x:Math.random()*pc.width,y:Math.random()*pc.height,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*Math.PI*2}})}
+  resizeP();addEventListener('resize',resizeP);
+  function drawP(){
+    pctx.clearRect(0,0,pc.width,pc.height);
+    for(var i=0;i<pts.length;i++){
+      var pt=pts[i];pt.x+=pt.vx;pt.y+=pt.vy;pt.a+=.015;
+      if(pt.x<0||pt.x>pc.width)pt.vx*=-1;
+      if(pt.y<0||pt.y>pc.height)pt.vy*=-1;
+      var op=.2+.5*Math.abs(Math.sin(pt.a));
+      pctx.beginPath();pctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);
+      pctx.fillStyle='rgba(212,175,55,'+op+')';pctx.fill();
+      for(var j=i+1;j<pts.length;j++){
+        var dx=pt.x-pts[j].x,dy=pt.y-pts[j].y,d=Math.hypot(dx,dy);
+        if(d<100){pctx.strokeStyle='rgba(212,175,55,'+((1-d/100)*.12)+')';pctx.lineWidth=.5;pctx.beginPath();pctx.moveTo(pt.x,pt.y);pctx.lineTo(pts[j].x,pts[j].y);pctx.stroke()}
+      }
+    }
+    requestAnimationFrame(drawP);
+  }
+  drawP();
+}
+
+/* ---------- title character reveal ---------- */
+document.querySelectorAll('.sec h2').forEach(function(el){
+  var orig=el.textContent;el.innerHTML=orig.split('').map(function(ch){return ch===' '?ch:'<span style="display:inline-block;opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s">'+ch+'</span>'}).join('');
+  var sp=el.querySelectorAll('span');
+  var io2=new IntersectionObserver(function(en){en.forEach(function(e){if(!e.isIntersecting)return;sp.forEach(function(s,i){setTimeout(function(){s.style.opacity=1;s.style.transform='translateY(0)'},i*35)});io2.unobserve(e.target)})},{threshold:.3});
+  io2.observe(el);
+});
+
+/* ---------- magnetic buttons ---------- */
+document.querySelectorAll('.btn,.logo,.burger').forEach(function(el){
+  el.addEventListener('mousemove',function(e){
+    var r=el.getBoundingClientRect();
+    var x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
+    el.style.transform='translate('+(x*.25)+'px,'+(y*.25)+'px)';
+  });
+  el.addEventListener('mouseleave',function(){el.style.transform=''});
+});
+var dy=document.getElementById('dy'),st=document.getElementById('st'),est=document.getElementById('est');
+function calc(){est.textContent='Rough estimate: about $'+((+dy.value)*(+st.value)).toLocaleString()+' for stay, food & activities (excl. flights).'}
+dy.onchange=st.onchange=calc;calc();
+document.getElementById('tf').onsubmit=function(e){e.preventDefault();
+  document.getElementById('msg').textContent='Done, '+(document.getElementById('nm').value||'traveller')+'. Your '+dy.value+'-day Dubai trip is ready. Time to book.'};
+</script>
+</body>
+</html>
